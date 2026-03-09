@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "ai-news-8am",
+      "agentId": "main",
+      "name": "AI News Digest - 8AM Daily",
+      "enabled": true,
+      "createdAtMs": 1770920000000,
+      "updatedAtMs": 1773077036311,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 * * *",
+        "tz": "Asia/Saigon"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "next-heartbeat",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Chạy skill ai-news-digest lấy tin AI/tech mới nhất và viết báo cáo ~500 từ, sau đó gửi qua Telegram cho Bệ hạ.",
+        "model": "deepseek/deepseek-chat",
+        "timeoutSeconds": 1200
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "telegram",
+        "to": "1863547567"
+      },
+      "state": {
+        "nextRunAtMs": 1773104400000,
+        "lastRunAtMs": 1773076481540,
+        "lastStatus": "error",
+        "lastDurationMs": 554771,
+        "consecutiveErrors": 3,
+        "lastRunStatus": "error",
+        "lastDeliveryStatus": "delivered",
+        "lastDelivered": true,
+        "lastError": "⚠️ ✉️ Message failed"
+      }
+    }
+  ]
+}

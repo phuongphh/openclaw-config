@@ -1,0 +1,32 @@
+# Secrets tuyệt đối không push
+.env
+credentials/
+identity/device-auth.json
+agents/*/agent/auth-profiles.json
+
+# Sensitive data
+*.sqlite
+*.key
+*.pem
+device.json
+
+# Telegram session data
+telegram/
+
+# Logs và temp files
+logs/
+*.log
+/tmp/
+
+# macOS
+.DS_Store
+
+# Memory (dữ liệu cá nhân)
+memory/
+workspace/memory/
+
+# Audio files (quá lớn)
+workspace/audio/
+
+# Node modules nếu có
+node_modules/

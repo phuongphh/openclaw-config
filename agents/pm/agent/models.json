@@ -1,0 +1,6 @@
+{
+  "model": {
+    "primary": "claude-sonnet-4-5",  
+    "fallbacks": ["claude-haiku-4-5"]
+  }
+}
