@@ -5,6 +5,9 @@ Gateway. PM manages requirements and PRs through the shared private
 `phuongphh/fleet-engineering` platform. The local DevOps agent owns Dev and
 Production activation on the owner's Mac; coding workers stop at a PR.
 
+Shared operations: https://github.com/phuongphh/fleet-engineering/blob/main/docs/OPERATIONS-VI.md
+Project profile: https://github.com/phuongphh/fleet-engineering/blob/main/projects/openclaw-config.json
+
 ## CI scope
 
 The `config` CI job checks JSON syntax, agent/binding/cron references and
@@ -21,8 +24,8 @@ Production approval.
 2. **Isolated compatibility check** – validate OpenClaw schema and plugin
    behavior in an isolated environment, separate from the offline CI JSON
    checks. Document the outcome.
-3. **Recovery path** – confirm a rollback procedure exists and is acknowledged
-   by the owner before any activation.
+3. **Recovery path** – include a verified rollback procedure in the version-bound
+   activation plan presented for the owner’s approval.
 
 Profile policy (CI, environment, protected-path restrictions) is defined in
 `projects/openclaw-config.json`; `dev_paths` describes deployment impact, not
