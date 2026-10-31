@@ -71,7 +71,7 @@ def prepare(root, candidate, brain_workspace=None):
             'baseUrl': f'http://127.0.0.1:{PROVIDER_PORT}/v1', 'api': 'openai-completions',
             'apiKey': 'fixture-local-only', 'models': models}}},
         'agents': {'defaults': {'workspace': str(root/'workspace'), 'skipBootstrap': True,
-                               'model': {'primary': 'dev-fixture/claw-fixture'}}, 'list': agents},
+                               'model': {'primary': 'dev-fixture/claw-fixture'}, 'heartbeat': {'every': '0m'}}, 'list': agents},
         'tools': {'profile': 'coding', 'allow': ['read'],
                   'deny': ['exec', 'process', 'write', 'edit', 'apply_patch', 'gateway', 'cron',
                            'sessions_spawn', 'sessions_send', 'message', 'browser', 'web_search', 'web_fetch'],
@@ -100,7 +100,9 @@ def completion(payload):
     tool_results = [m for m in messages if m.get('role') == 'tool']
     if tool_results:
         body = text_content(tool_results[-1].get('content'))
-        return {'role': 'assistant', 'content': 'DEV fixture result (not model-quality evaluation):\n'+body[:6000]}
+        calls = [c for m in messages for c in m.get('tool_calls', [])]
+        reference = calls[-1].get('function', {}).get('arguments', '{}') if calls else '{}'
+        return {'role': 'assistant', 'content': 'DEV fixture result (not model-quality evaluation):\n'+body[:6000]+'\nSource request: '+reference}
     tools = payload.get('tools', [])
     read = next((t['function'] for t in tools if t.get('function', {}).get('name') == 'read'), None)
     if not read:
@@ -109,6 +111,10 @@ def completion(payload):
     last = text_content(next((m.get('content') for m in reversed(messages) if m.get('role') == 'user'), ''))
     if 'OUTSIDE_WORKSPACE_TEST' in last:
         path = '/etc/hosts'
+    if 'EXEC_DENIAL_TEST' in last or 'WRITE_DENIAL_TEST' in last:
+        name = 'exec' if 'EXEC_DENIAL_TEST' in last else 'write'
+        arguments = {'command': 'printf forbidden'} if name == 'exec' else {'path': 'DEV-write-probe.txt', 'content': 'forbidden'}
+        return {'role': 'assistant', 'content': None, 'tool_calls': [{'id': 'call_dev_denial', 'type': 'function', 'function': {'name': name, 'arguments': json.dumps(arguments)}}]}
     properties = read.get('parameters', {}).get('properties', {})
     key = 'path' if 'path' in properties else 'file_path'
     return {'role': 'assistant', 'content': None, 'tool_calls': [{
